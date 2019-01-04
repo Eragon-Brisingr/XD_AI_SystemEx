@@ -25,8 +25,7 @@
 UCLASS()
 class UXD_AI_SystemExBPLibrary : public UBlueprintFunctionLibrary
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
+public:
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Execute Sample function", Keywords = "XD_AI_SystemEx sample test testing"), Category = "XD_AI_SystemExTesting")
-	static float XD_AI_SystemExSampleFunction(float Param);
 };
