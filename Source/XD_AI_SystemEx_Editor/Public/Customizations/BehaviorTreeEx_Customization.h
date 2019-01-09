@@ -16,8 +16,9 @@ class UXD_BehaviorTreeFactory : public UFactory
 	GENERATED_UCLASS_BODY()
 public:
 	// UFactory interface
-	virtual UObject* FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
-	virtual bool CanCreateNew() const override;
+	UObject* FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
+	bool CanCreateNew() const override;
+	bool ShouldShowInNewMenu() const override;
 	// End of UFactory interface
 };
 

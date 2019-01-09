@@ -22,6 +22,11 @@ bool UXD_BehaviorTreeFactory::CanCreateNew() const
 	return true;
 }
 
+bool UXD_BehaviorTreeFactory::ShouldShowInNewMenu() const
+{
+	return false;
+}
+
 UObject* UXD_BehaviorTreeFactory::FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
 {
 	check(Class->IsChildOf(UBehaviorTree::StaticClass()));
