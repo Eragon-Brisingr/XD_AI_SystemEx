@@ -27,4 +27,4 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FXD_AI_SystemEx_EditorModule, XD_AI_SystemEx)
+IMPLEMENT_MODULE(FXD_AI_SystemEx_EditorModule, XD_AI_SystemEx_Editor)

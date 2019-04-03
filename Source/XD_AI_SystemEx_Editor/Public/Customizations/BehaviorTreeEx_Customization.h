@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class UXD_BehaviorTreeFactory : public UFactory
 {
 	GENERATED_UCLASS_BODY()
