@@ -1,5 +1,6 @@
 // Some copyright should be here...
 
+using System.IO;
 using UnrealBuildTool;
 
 public class XD_AI_SystemEx : ModuleRules
@@ -11,7 +12,7 @@ public class XD_AI_SystemEx : ModuleRules
 		PublicIncludePaths.AddRange(
 			new string[] {
 				// ... add public include paths required here ...
-			}
+            }
 			);
 				
 		
@@ -20,12 +21,13 @@ public class XD_AI_SystemEx : ModuleRules
 				// ... add other private include paths required here ...
 			}
 			);
-			
-		
-		PublicDependencyModuleNames.AddRange(
+        
+
+        PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
+                "Navmesh",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -40,7 +42,8 @@ public class XD_AI_SystemEx : ModuleRules
 				"SlateCore",
 
                 "AIModule",
-                "GameplayTags"
+                "GameplayTags",
+                "NavigationSystem",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

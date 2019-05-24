@@ -3,6 +3,8 @@
 #include "XD_AI_SystemEx_Editor.h"
 #include "PropertyEditorModule.h"
 #include "XD_PropertyCustomizationEx.h"
+#include "ISettingsModule.h"
+#include "XD_RecastNavMesh.h"
 
 #define LOCTEXT_NAMESPACE "FXD_AI_SystemEx_EditorModule"
 
@@ -15,6 +17,19 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 
 		RegisterCustomProperty(struct FBehaviorTreeInstantiatable, FBehaviorTreeInstantiatable_Customization);
 		RegisterCustomProperty(struct FBehaviorTreeWithSubTree, FBehaviorTreeWithSubTree_Customization);
+	}
+
+	{
+// 		ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
+// 
+// 		if (SettingsModule != nullptr)
+// 		{
+// 			SettingsModule->RegisterSettings("Project", "Plugins", "XD_RecastNavMesh",
+// 				LOCTEXT("XD_RecastNavMesh", "XD_RecastNavMesh"),
+// 				LOCTEXT("XD_RecastNavMeshDescription", "Configure the XD_RecastNavMesh."),
+// 				GetMutableDefault<AXD_RecastNavMesh>()
+// 			);
+// 		}
 	}
 }
 
