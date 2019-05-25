@@ -5,13 +5,12 @@
 #include "NavLinkComponent.h"
 
 // Sets default values
-AXD_NavDataExtra::AXD_NavDataExtra()
+AXD_NavDataExtra::AXD_NavDataExtra(const FObjectInitializer& ObjectInitializer)
+	:Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-// 	JumpNavLinkComponent = CreateDefaultSubobject<UNavLinkComponent>(GET_MEMBER_NAME_CHECKED(AXD_NavDataExtra, JumpNavLinkComponent));
-// 	SetRootComponent(JumpNavLinkComponent);
 }
 
 // Called when the game starts or when spawned
@@ -34,22 +33,49 @@ FBox AXD_NavDataExtra::GetComponentsBoundingBox(bool bNonColliding /*= false*/) 
 
 	FBox LinksBB(FVector(MAX_flt), FVector(-MAX_flt));
 
-	for (int32 i = 0; i < PointLinks.Num(); ++i)
+	if (PointLinks.Num() || SegmentLinks.Num())
 	{
-		const FNavigationLink& Link = PointLinks[i];
-		LinksBB += Link.Left;
-		LinksBB += Link.Right;
-	}
+		for (int32 i = 0; i < PointLinks.Num(); ++i)
+		{
+			const FNavigationLink& Link = PointLinks[i];
+			LinksBB += Link.Left;
+			LinksBB += Link.Right;
+		}
 
-	for (int32 i = 0; i < SegmentLinks.Num(); ++i)
-	{
-		const FNavigationSegmentLink& SegmentLink = SegmentLinks[i];
-		LinksBB += SegmentLink.LeftStart;
-		LinksBB += SegmentLink.LeftEnd;
-		LinksBB += SegmentLink.RightStart;
-		LinksBB += SegmentLink.RightEnd;
+		for (int32 i = 0; i < SegmentLinks.Num(); ++i)
+		{
+			const FNavigationSegmentLink& SegmentLink = SegmentLinks[i];
+			LinksBB += SegmentLink.LeftStart;
+			LinksBB += SegmentLink.LeftEnd;
+			LinksBB += SegmentLink.RightStart;
+			LinksBB += SegmentLink.RightEnd;
+		}
+		return LinksBB.ExpandBy(FVector::ZeroVector, FVector(200.f, 200.f, 200.f));
 	}
 
 	return LinksBB;
+}
+
+FBox AXD_NavDataExtra::GetNavigationBounds() const
+{
+	return GetComponentsBoundingBox();
+}
+
+bool AXD_NavDataExtra::IsNavigationRelevant() const
+{
+	return (PointLinks.Num() > 0) || (SegmentLinks.Num() > 0);
+}
+
+bool AXD_NavDataExtra::GetNavigationLinksClasses(TArray<TSubclassOf<UNavLinkDefinition> >& OutClasses) const
+{
+	return false;
+}
+
+bool AXD_NavDataExtra::GetNavigationLinksArray(TArray<FNavigationLink>& OutLink, TArray<FNavigationSegmentLink>& OutSegments) const
+{
+	OutLink.Append(PointLinks);
+	OutSegments.Append(SegmentLinks);
+
+	return (PointLinks.Num() > 0) || (SegmentLinks.Num() > 0);
 }
 

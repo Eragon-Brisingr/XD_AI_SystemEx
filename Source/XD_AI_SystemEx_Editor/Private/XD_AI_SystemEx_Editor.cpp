@@ -20,16 +20,16 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 	}
 
 	{
-// 		ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
-// 
-// 		if (SettingsModule != nullptr)
-// 		{
-// 			SettingsModule->RegisterSettings("Project", "Plugins", "XD_RecastNavMesh",
-// 				LOCTEXT("XD_RecastNavMesh", "XD_RecastNavMesh"),
-// 				LOCTEXT("XD_RecastNavMeshDescription", "Configure the XD_RecastNavMesh."),
-// 				GetMutableDefault<AXD_RecastNavMesh>()
-// 			);
-// 		}
+		ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
+
+		if (SettingsModule != nullptr)
+		{
+			SettingsModule->RegisterSettings("Project", "Plugins", "XD_RecastNavMesh",
+				LOCTEXT("XD_RecastNavMesh", "XD_RecastNavMesh"),
+				LOCTEXT("XD_RecastNavMeshDescription", "Configure the XD_RecastNavMesh."),
+				GetMutableDefault<AXD_RecastNavMesh>()
+			);
+		}
 	}
 }
 

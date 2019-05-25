@@ -9,14 +9,14 @@
 class UNavLinkComponent;
 class UNavLinkRenderingComponent;
 
-UCLASS()
+UCLASS(Transient, hidecategories = (Input, Rendering, Tags, Transform, "Utilities|Transformation", Actor, Layers, Replication))
 class XD_AI_SYSTEMEX_API AXD_NavDataExtra : public ANavLinkProxy
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AXD_NavDataExtra();
+	AXD_NavDataExtra(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,8 +28,15 @@ public:
 
 	FBox GetComponentsBoundingBox(bool bNonColliding = false) const override;
 
-// 	UPROPERTY(VisibleAnywhere, Category = "NavLink")
-// 	UNavLinkComponent* JumpNavLinkComponent;
-
 	int32 bIsNavLinkUpdated : 1;
+
+	// BEGIN INavRelevantInterface
+	FBox GetNavigationBounds() const override;
+	bool IsNavigationRelevant() const override;
+	// END INavRelevantInterface
+
+	// BEGIN INavLinkHostInterface
+	bool GetNavigationLinksClasses(TArray<TSubclassOf<UNavLinkDefinition> >& OutClasses) const override;
+	bool GetNavigationLinksArray(TArray<FNavigationLink>& OutLink, TArray<FNavigationSegmentLink>& OutSegments) const override;
+	// END INavLinkHostInterface
 };
