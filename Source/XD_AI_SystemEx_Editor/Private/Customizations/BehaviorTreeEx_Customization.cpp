@@ -35,17 +35,35 @@ UObject* UXD_BehaviorTreeFactory::FactoryCreateNew(UClass* Class, UObject* InPar
 
 void FBehaviorTreeInstantiatable_Customization::CustomizeHeader(TSharedRef<class IPropertyHandle> StructPropertyHandle, class FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
-	TSharedPtr<IPropertyHandle> BehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, BehaviorTree));
+	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
 
-	IPropertyTypeWithInstancedButtonHelper::CustomizeHeader(UBehaviorTree::StaticClass(), UXD_BehaviorTreeFactory::StaticClass(), LOCTEXT("创建行为树", "创建行为树"), StructPropertyHandle, BehaviorTree_PropertyHandle.ToSharedRef(), HeaderRow, StructCustomizationUtils);
+	FPropertyCustomizeHelper::SetValue(DisplayBehaviorTree_PropertyHandle, FPropertyCustomizeHelper::GetValue<FBehaviorTreeInstantiatable>(StructPropertyHandle).BehaviorTree, false);
+	DisplayBehaviorTree_PropertyHandle->SetOnPropertyValueChanged(FSimpleDelegate::CreateLambda([=]()
+		{
+			if (FBehaviorTreeInstantiatable* BehaviorTreeInstantiatable = FPropertyCustomizeHelper::Value<FBehaviorTreeInstantiatable>(StructPropertyHandle))
+			{
+				BehaviorTreeInstantiatable->BehaviorTree = BehaviorTreeInstantiatable->DisplayBehaviorTree;
+			}
+		}));
+
+	FPropertyTypeWithInstancedButtonHelper::CustomizeHeader(UBehaviorTree::StaticClass(), UXD_BehaviorTreeFactory::StaticClass(), LOCTEXT("创建行为树", "创建行为树"), StructPropertyHandle, DisplayBehaviorTree_PropertyHandle.ToSharedRef(), HeaderRow, StructCustomizationUtils);
 }
 
 void FBehaviorTreeWithSubTree_Customization::CustomizeHeader(TSharedRef<class IPropertyHandle> StructPropertyHandle, class FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
 	TSharedPtr<IPropertyHandle> MainBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeWithSubTree, MainBehaviorTree));
-	TSharedPtr<IPropertyHandle> BehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(MainBehaviorTree_PropertyHandle.ToSharedRef(), GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, BehaviorTree));
+	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(MainBehaviorTree_PropertyHandle.ToSharedRef(), GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
 
-	IPropertyTypeWithInstancedButtonHelper::CustomizeHeader(UBehaviorTree::StaticClass(), UXD_BehaviorTreeFactory::StaticClass(), LOCTEXT("创建行为树", "创建行为树"), StructPropertyHandle, BehaviorTree_PropertyHandle.ToSharedRef(), HeaderRow, StructCustomizationUtils);
+	FPropertyCustomizeHelper::SetValue(DisplayBehaviorTree_PropertyHandle, FPropertyCustomizeHelper::GetValue<FBehaviorTreeInstantiatable>(StructPropertyHandle).BehaviorTree, false);
+	DisplayBehaviorTree_PropertyHandle->SetOnPropertyValueChanged(FSimpleDelegate::CreateLambda([=]()
+		{
+			if (FBehaviorTreeInstantiatable * BehaviorTreeInstantiatable = FPropertyCustomizeHelper::Value<FBehaviorTreeInstantiatable>(StructPropertyHandle))
+			{
+				BehaviorTreeInstantiatable->BehaviorTree = BehaviorTreeInstantiatable->DisplayBehaviorTree;
+			}
+		}));
+
+	FPropertyTypeWithInstancedButtonHelper::CustomizeHeader(UBehaviorTree::StaticClass(), UXD_BehaviorTreeFactory::StaticClass(), LOCTEXT("创建行为树", "创建行为树"), StructPropertyHandle, DisplayBehaviorTree_PropertyHandle.ToSharedRef(), HeaderRow, StructCustomizationUtils);
 }
 
 void FBehaviorTreeWithSubTree_Customization::CustomizeChildren(TSharedRef<class IPropertyHandle> StructPropertyHandle, class IDetailChildrenBuilder& StructBuilder, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
