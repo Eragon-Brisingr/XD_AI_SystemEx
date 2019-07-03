@@ -22,8 +22,10 @@ public:
 	operator const UBehaviorTree*() const { return BehaviorTree; }
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", Transient)
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, Category = "AI", Transient)
 	UBehaviorTree* DisplayBehaviorTree;
+#endif
 
  	UPROPERTY(Instanced)
  	UBehaviorTree* BehaviorTree;
