@@ -35,7 +35,7 @@ UObject* UXD_BehaviorTreeFactory::FactoryCreateNew(UClass* Class, UObject* InPar
 
 void FBehaviorTreeInstantiatable_Customization::CustomizeHeader(TSharedRef<class IPropertyHandle> StructPropertyHandle, class FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
-	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
+	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
 
 	FPropertyCustomizeHelper::SetValue(DisplayBehaviorTree_PropertyHandle, FPropertyCustomizeHelper::GetValue<FBehaviorTreeInstantiatable>(StructPropertyHandle).BehaviorTree, false);
 	DisplayBehaviorTree_PropertyHandle->SetOnPropertyValueChanged(FSimpleDelegate::CreateLambda([=]()
@@ -51,8 +51,8 @@ void FBehaviorTreeInstantiatable_Customization::CustomizeHeader(TSharedRef<class
 
 void FBehaviorTreeWithSubTree_Customization::CustomizeHeader(TSharedRef<class IPropertyHandle> StructPropertyHandle, class FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
-	TSharedPtr<IPropertyHandle> MainBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeWithSubTree, MainBehaviorTree));
-	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(MainBehaviorTree_PropertyHandle.ToSharedRef(), GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
+	TSharedPtr<IPropertyHandle> MainBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(StructPropertyHandle, GET_MEMBER_NAME_CHECKED(FBehaviorTreeWithSubTree, MainBehaviorTree));
+	TSharedPtr<IPropertyHandle> DisplayBehaviorTree_PropertyHandle = FPropertyCustomizeHelper::GetPropertyHandleByName(MainBehaviorTree_PropertyHandle.ToSharedRef(), GET_MEMBER_NAME_CHECKED(FBehaviorTreeInstantiatable, DisplayBehaviorTree));
 
 	FPropertyCustomizeHelper::SetValue(DisplayBehaviorTree_PropertyHandle, FPropertyCustomizeHelper::GetValue<FBehaviorTreeInstantiatable>(StructPropertyHandle).BehaviorTree, false);
 	DisplayBehaviorTree_PropertyHandle->SetOnPropertyValueChanged(FSimpleDelegate::CreateLambda([=]()
@@ -68,7 +68,7 @@ void FBehaviorTreeWithSubTree_Customization::CustomizeHeader(TSharedRef<class IP
 
 void FBehaviorTreeWithSubTree_Customization::CustomizeChildren(TSharedRef<class IPropertyHandle> StructPropertyHandle, class IDetailChildrenBuilder& StructBuilder, IPropertyTypeCustomizationUtils& StructCustomizationUtils)
 {
-	FPropertyCustomizeHelper::StructBuilderDrawPropertys(StructBuilder, StructPropertyHandle, { GET_MEMBER_NAME_STRING_CHECKED(FBehaviorTreeWithSubTree, MainBehaviorTree) });
+	FPropertyCustomizeHelper::StructBuilderDrawPropertys(StructBuilder, StructPropertyHandle, { GET_MEMBER_NAME_CHECKED(FBehaviorTreeWithSubTree, MainBehaviorTree) });
 }
 
 #undef LOCTEXT_NAMESPACE
