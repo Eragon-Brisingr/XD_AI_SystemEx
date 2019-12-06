@@ -42,6 +42,7 @@ public class XD_AI_SystemEx : ModuleRules
 				"SlateCore",
 
                 "AIModule",
+                "GameplayTasks",
                 "GameplayTags",
                 "NavigationSystem",
 				// ... add private dependencies that you statically link with here ...	

@@ -2,11 +2,21 @@
 
 #include "XD_AI_SystemEx_Editor.h"
 #include "PropertyEditorModule.h"
-#include "XD_PropertyCustomizationEx.h"
 #include "ISettingsModule.h"
+#include "EditorModeRegistry.h"
+#include "Editor.h"
+#include "EditorModeManager.h"
+#include "AssetEditorManager.h"
+
+#include "XD_PropertyCustomizationEx.h"
 #include "XD_RecastNavMesh.h"
+#include "EdMode_AI_SystemEx.h"
+#include "BehaviorTree/BehaviorTree.h"
 
 #define LOCTEXT_NAMESPACE "FXD_AI_SystemEx_EditorModule"
+
+struct FBehaviorTreeInstantiatable;
+struct FBehaviorTreeWithSubTree;
 
 void FXD_AI_SystemEx_EditorModule::StartupModule()
 {
@@ -15,8 +25,8 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 	{
 		FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-		RegisterCustomProperty(struct FBehaviorTreeInstantiatable, FBehaviorTreeInstantiatable_Customization);
-		RegisterCustomProperty(struct FBehaviorTreeWithSubTree, FBehaviorTreeWithSubTree_Customization);
+		RegisterCustomProperty(FBehaviorTreeInstantiatable, FBehaviorTreeInstantiatable_Customization);
+		RegisterCustomProperty(FBehaviorTreeWithSubTree, FBehaviorTreeWithSubTree_Customization);
 	}
 
 	{
@@ -31,6 +41,17 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 			);
 		}
 	}
+
+	FEditorModeRegistry::Get().RegisterMode<EdMode_AI_SystemEx>(EdMode_AI_SystemEx::ID);
+
+	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
+	OnAssetOpenedInEditorHandle = AssetEditorManager.OnAssetOpenedInEditor().AddLambda([](UObject* Asset, IAssetEditorInstance* AssetEditorInstance)
+		{
+			if (UBehaviorTree* BehaviorTree = Cast<UBehaviorTree>(Asset))
+			{
+				GLevelEditorModeTools().ActivateMode(EdMode_AI_SystemEx::ID);
+			}
+		});
 }
 
 void FXD_AI_SystemEx_EditorModule::ShutdownModule()
@@ -38,6 +59,17 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
 	
+	{
+		FPropertyEditorModule* PropertyModule = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor");
+		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeInstantiatable));
+		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeWithSubTree));
+	}
+
+	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
+	AssetEditorManager.OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
+
+	GLevelEditorModeTools().DeactivateMode(EdMode_AI_SystemEx::ID);
+	FEditorModeRegistry::Get().UnregisterMode(EdMode_AI_SystemEx::ID);
 }
 
 #undef LOCTEXT_NAMESPACE
