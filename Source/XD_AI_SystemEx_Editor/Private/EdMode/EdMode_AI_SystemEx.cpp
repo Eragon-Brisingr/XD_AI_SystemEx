@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EdMode_AI_SystemEx.h"
@@ -14,9 +14,9 @@
 
 #define LOCTEXT_NAMESPACE "XD_AI_SystemEx"
 
-FName EdMode_AI_SystemEx::ID = TEXT("EdMode_AI_SystemEx");
+FName FEdMode_AI_SystemEx::ID = TEXT("EdMode_AI_SystemEx");
 
-EdMode_AI_SystemEx::EdMode_AI_SystemEx()
+FEdMode_AI_SystemEx::FEdMode_AI_SystemEx()
 {
 }
 
@@ -33,7 +33,7 @@ struct HBehaivorTreeNodePointProxy : public HHitProxy
 };
 IMPLEMENT_HIT_PROXY(HBehaivorTreeNodePointProxy, HHitProxy);
 
-void EdMode_AI_SystemEx::Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI)
+void FEdMode_AI_SystemEx::Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI)
 {
 	const FColor NormalColor(200, 200, 200);
 	const FColor SelectedColor(255, 128, 0);
@@ -59,9 +59,9 @@ void EdMode_AI_SystemEx::Render(const FSceneView* View, FViewport* Viewport, FPr
 	Super::Render(View, Viewport, PDI);
 }
 
-void EdMode_AI_SystemEx::DrawHUD(FEditorViewportClient* ViewportClient, FViewport* Viewport, const FSceneView* View, FCanvas* Canvas)
+void FEdMode_AI_SystemEx::DrawHUD(FEditorViewportClient* ViewportClient, FViewport* Viewport, const FSceneView* View, FCanvas* Canvas)
 {
-	FString Desc = FText::Format(LOCTEXT("BehaviorTree Edit Mode Desc", "BehaviorTree Edit Mode\nCurrent Edit Node : {0}"), SelectedNode.IsValid() ? SelectedNode->GetNodeTitle(ENodeTitleType::FullTitle) : LOCTEXT("None", "None")).ToString();
+	FString Desc = FText::Format(LOCTEXT("BehaviorTree Edit Mode Desc", "处于行为树编辑模式\n当前编辑节点 : {0}"), SelectedNode.IsValid() ? SelectedNode->GetNodeTitle(ENodeTitleType::FullTitle) : LOCTEXT("None", "None")).ToString();
 
 	const FIntRect CanvasRect = Canvas->GetViewRect();
 	int32 XL;
@@ -73,7 +73,7 @@ void EdMode_AI_SystemEx::DrawHUD(FEditorViewportClient* ViewportClient, FViewpor
 	Canvas->DrawShadowedString(DrawX, DrawY, *Desc, GEngine->GetLargeFont(), FLinearColor::Yellow);
 }
 
-bool EdMode_AI_SystemEx::HandleClick(FEditorViewportClient* InViewportClient, HHitProxy *HitProxy, const FViewportClick &Click)
+bool FEdMode_AI_SystemEx::HandleClick(FEditorViewportClient* InViewportClient, HHitProxy *HitProxy, const FViewportClick &Click)
 {
 	if (HitProxy)
 	{
@@ -93,7 +93,7 @@ bool EdMode_AI_SystemEx::HandleClick(FEditorViewportClient* InViewportClient, HH
 	return false;
 }
 
-void EdMode_AI_SystemEx::Tick(FEditorViewportClient* ViewportClient, float DeltaTime)
+void FEdMode_AI_SystemEx::Tick(FEditorViewportClient* ViewportClient, float DeltaTime)
 {
 	SelectedActor = GetFirstSelectedActorInstance();
 
@@ -125,7 +125,7 @@ void EdMode_AI_SystemEx::Tick(FEditorViewportClient* ViewportClient, float Delta
 	ValidNodeList.Empty();
 	if (ActivedBehaviorTreeEditorInstance)
 	{
-		// ����FBehaviorTreeEditor��������ֻ��ͨ�����ַ�ʽ�õ�FAIGraphEditor
+		// 由于FBehaviorTreeEditor不公开，只能通过这种方式拿到FAIGraphEditor
 		FAIGraphEditor* AIGraphEditor = (FAIGraphEditor*)((char*)ActivedBehaviorTreeEditorInstance + sizeof(FWorkflowCentricApplication));
 		FGraphPanelSelectionSet CurrentSelection = AIGraphEditor->GetSelectedNodes();
 		for (UObject* Node : CurrentSelection)
@@ -137,15 +137,16 @@ void EdMode_AI_SystemEx::Tick(FEditorViewportClient* ViewportClient, float Delta
 					ValidNodeList.Add(AIGraphNode);
 				}
 			}
+			// 由于UBehaviorTreeDecoratorGraphNode没被模块公开，没法做可视化
 		}
 	}
 	else
 	{
-		GLevelEditorModeTools().DeactivateMode(EdMode_AI_SystemEx::ID);
+		GLevelEditorModeTools().DeactivateMode(FEdMode_AI_SystemEx::ID);
 	}
 }
 
-bool EdMode_AI_SystemEx::InputDelta(FEditorViewportClient* InViewportClient, FViewport* InViewport, FVector& InDrag, FRotator& InRot, FVector& InScale)
+bool FEdMode_AI_SystemEx::InputDelta(FEditorViewportClient* InViewportClient, FViewport* InViewport, FVector& InDrag, FRotator& InRot, FVector& InScale)
 {
 	if (IXD_BehaviorTreeNodeEditMode* Node = GetSelectedNode())
 	{
@@ -158,55 +159,69 @@ bool EdMode_AI_SystemEx::InputDelta(FEditorViewportClient* InViewportClient, FVi
 			const bool bDoTranslation = WidgetMode == FWidget::WM_Translate || WidgetMode == FWidget::WM_TranslateRotateZ;
 			const bool bDoScale = WidgetMode == FWidget::WM_Scale;
 
-			FTransform WorldTransform = SelectedActor->GetActorTransform();
-			FTransform Transform = Node->GetRelativeTransform();
-			Transform.AddToTranslation(WorldTransform.InverseTransformVectorNoScale(InDrag));
-			Transform.ConcatenateRotation(InRot.Quaternion());
-			Transform.SetScale3D(Transform.GetScale3D() + InScale);
-			Node->SetRelativeTransform(Transform);
+			const FTransform ParentTransform = SelectedActor->GetActorTransform();
+			FTransform RelativeTransform = Node->GetRelativeTransform();
+			if (bDoTranslation)
+			{
+				RelativeTransform.AddToTranslation(ParentTransform.InverseTransformVectorNoScale(InDrag));
+			}
+			if (bDoRotation)
+			{
+				const FTransform InverseWorldTransform = (RelativeTransform * ParentTransform).Inverse();
+				FVector RotAxis;
+				float RotAngle;
+				InRot.Quaternion().ToAxisAndAngle(RotAxis, RotAngle);
+				const FVector4 BoneSpaceAxis = InverseWorldTransform.TransformVectorNoScale(RotAxis);
+				RelativeTransform.SetRotation(FQuat(BoneSpaceAxis, RotAngle).GetNormalized() * RelativeTransform.GetRotation());
+			}
+			if (bDoScale)
+			{
+				RelativeTransform.SetScale3D(RelativeTransform.GetScale3D() + InScale);
+			}
+			Node->SetRelativeTransform(RelativeTransform);
 			return true;
 		}
 	}
 	return false;
 }
 
-bool EdMode_AI_SystemEx::ShowModeWidgets() const
+bool FEdMode_AI_SystemEx::ShowModeWidgets() const
 {
 	return false;
 }
 
-bool EdMode_AI_SystemEx::ShouldDrawWidget() const
+bool FEdMode_AI_SystemEx::ShouldDrawWidget() const
 {
 	return SelectedActor && GetSelectedNode() ? true : false;
 }
 
-bool EdMode_AI_SystemEx::UsesTransformWidget() const
+bool FEdMode_AI_SystemEx::UsesTransformWidget() const
 {
 	return SelectedActor && GetSelectedNode() ? true : false;
 }
 
-FVector EdMode_AI_SystemEx::GetWidgetLocation() const
+FVector FEdMode_AI_SystemEx::GetWidgetLocation() const
 {
 	return SelectedActor->GetActorTransform().TransformPosition(GetSelectedNode()->GetRelativeTransform().GetLocation());
 }
 
-// bool EdMode_AI_SystemEx::GetCustomDrawingCoordinateSystem(FMatrix& InMatrix, void* InData)
-// {
-// 	IXD_BehaviorTreeNodeEditMode* BehaviorTreeNodeEditMode = Cast<IXD_BehaviorTreeNodeEditMode>(GetSelectedNode());
-// 	if (SelectedActor && BehaviorTreeNodeEditMode)
-// 	{
-// 		InMatrix = (BehaviorTreeNodeEditMode->GetRelativeTransform() * SelectedActor->GetActorTransform()).ToMatrixWithScale();
-// 		return true;
-// 	}
-// 	return false;
-// }
-// 
-// bool EdMode_AI_SystemEx::GetCustomInputCoordinateSystem(FMatrix& InMatrix, void* InData)
-// {
-// 	return GetCustomDrawingCoordinateSystem(InMatrix, InData);
-// }
+bool FEdMode_AI_SystemEx::GetCustomDrawingCoordinateSystem(FMatrix& InMatrix, void* InData)
+{
+	IXD_BehaviorTreeNodeEditMode* BehaviorTreeNodeEditMode = Cast<IXD_BehaviorTreeNodeEditMode>(GetSelectedNode());
+	if (SelectedActor && BehaviorTreeNodeEditMode)
+	{
+		InMatrix = FTransform(SelectedActor->GetActorTransform().TransformRotation(BehaviorTreeNodeEditMode->GetRelativeTransform().GetRotation())).ToMatrixWithScale();
+		return true;
+	}
+	return false;
+}
 
-IXD_BehaviorTreeNodeEditMode* EdMode_AI_SystemEx::GetSelectedNode() const
+bool FEdMode_AI_SystemEx::GetCustomInputCoordinateSystem(FMatrix& InMatrix, void* InData)
+{
+	return GetCustomDrawingCoordinateSystem(InMatrix, InData);
+}
+
+IXD_BehaviorTreeNodeEditMode* FEdMode_AI_SystemEx::GetSelectedNode() const
 {
 	if (CurrentSelectedIndex < ValidNodeList.Num() && ValidNodeList[CurrentSelectedIndex] == SelectedNode.Get())
 	{

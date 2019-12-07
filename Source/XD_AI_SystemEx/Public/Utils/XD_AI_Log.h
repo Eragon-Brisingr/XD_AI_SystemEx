@@ -7,7 +7,7 @@
 /**
  * 
  */
-DECLARE_LOG_CATEGORY_EXTERN(XD_AI_Log, Log, All);
+XD_AI_SYSTEMEX_API DECLARE_LOG_CATEGORY_EXTERN(XD_AI_Log, Log, All);
 
 #define XD_AIDisplay_LOG(FMT, ...) UE_LOG(XD_AI_Log, Display, TEXT(FMT), ##__VA_ARGS__)
 #define XD_AIWarning_LOG(FMT, ...) UE_LOG(XD_AI_Log, Warning, TEXT(FMT), ##__VA_ARGS__)

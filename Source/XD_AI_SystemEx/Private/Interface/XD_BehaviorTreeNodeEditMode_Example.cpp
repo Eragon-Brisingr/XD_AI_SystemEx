@@ -11,7 +11,9 @@ void UXD_BehaviorTreeNodeEditMode_Example::Render(const FTransform& WorldTransfo
 // 	Sphere.W = 100.f;
 // 	DrawSphere(PDI, Sphere.Center, FRotator::ZeroRotator, FVector(Sphere.W), 24, 6,
 // 		GEngine->ConstraintLimitMaterialPrismatic->GetRenderProxy(), SDPG_World);
-// 	DrawWireSphere(PDI, Sphere.Center, FLinearColor::Black, Sphere.W, 24, SDPG_World);
+// 	DrawWireSphere(PDI, Sphere.Center, Color, Sphere.W, 24, SDPG_Foreground);
 
-	DrawBox(PDI, (RelativeTransform * WorldTransform).ToMatrixWithScale(), FVector::OneVector * 0.5f, GEngine->ConstraintLimitMaterialPrismatic->GetRenderProxy(), SDPG_World);
+	FMatrix WorldPos = (RelativeTransform * WorldTransform).ToMatrixWithScale();
+	DrawBox(PDI, WorldPos, FVector::OneVector * 0.5f, GEngine->ConstraintLimitMaterialPrismatic->GetRenderProxy(), SDPG_World);
+	DrawWireBox(PDI, WorldPos, FBox(-FVector::OneVector * 0.5f, FVector::OneVector * 0.5f), FLinearColor(Color), SDPG_Foreground);
 }

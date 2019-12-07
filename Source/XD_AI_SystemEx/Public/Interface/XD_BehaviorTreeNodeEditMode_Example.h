@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
 #include "XD_BehaviorTreeNodeEditMode.h"
-#include "XD_BehaviorTreeNodeEditMode_Example.generated.h"
+//#include "XD_BehaviorTreeNodeEditMode_Example.generated.h"
 
 /**
- * 
+ *  这是个IXD_BehaviorTreeNodeEditMode使用的例子
  */
-UCLASS()
-class XD_AI_SYSTEMEX_API UXD_BehaviorTreeNodeEditMode_Example : public UBTDecorator,
+//UCLASS()
+class UXD_BehaviorTreeNodeEditMode_Example : public UBTDecorator,
 	public IXD_BehaviorTreeNodeEditMode
 {
-	GENERATED_BODY()
+	//GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, Category = "Test")
+	//UPROPERTY(EditAnywhere, Category = "Test")
 	FTransform RelativeTransform = FTransform(FQuat::Identity, FVector::ZeroVector, FVector::OneVector * 100.f);
 
 	FTransform GetRelativeTransform() const override { return FTransform(RelativeTransform); }

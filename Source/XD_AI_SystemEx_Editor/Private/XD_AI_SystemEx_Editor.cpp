@@ -42,14 +42,14 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 		}
 	}
 
-	FEditorModeRegistry::Get().RegisterMode<EdMode_AI_SystemEx>(EdMode_AI_SystemEx::ID);
+	FEditorModeRegistry::Get().RegisterMode<FEdMode_AI_SystemEx>(FEdMode_AI_SystemEx::ID);
 
 	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
 	OnAssetOpenedInEditorHandle = AssetEditorManager.OnAssetOpenedInEditor().AddLambda([](UObject* Asset, IAssetEditorInstance* AssetEditorInstance)
 		{
 			if (UBehaviorTree* BehaviorTree = Cast<UBehaviorTree>(Asset))
 			{
-				GLevelEditorModeTools().ActivateMode(EdMode_AI_SystemEx::ID);
+				GLevelEditorModeTools().ActivateMode(FEdMode_AI_SystemEx::ID);
 			}
 		});
 }
@@ -68,8 +68,8 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
 	AssetEditorManager.OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
 
-	GLevelEditorModeTools().DeactivateMode(EdMode_AI_SystemEx::ID);
-	FEditorModeRegistry::Get().UnregisterMode(EdMode_AI_SystemEx::ID);
+	GLevelEditorModeTools().DeactivateMode(FEdMode_AI_SystemEx::ID);
+	FEditorModeRegistry::Get().UnregisterMode(FEdMode_AI_SystemEx::ID);
 }
 
 #undef LOCTEXT_NAMESPACE

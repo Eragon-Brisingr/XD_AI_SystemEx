@@ -43,6 +43,7 @@ public class XD_AI_SystemEx_Editor : ModuleRules
                 "AIModule",
                 "GameplayTags",
                 "AIGraph",
+                "BehaviorTreeEditor",
 
                 "XD_AI_SystemEx",
                 "XD_UnrealLibraryEx",

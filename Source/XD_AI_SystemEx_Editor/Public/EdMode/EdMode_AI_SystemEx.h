@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,11 +10,11 @@ class UAIGraphNode;
 /**
  * 
  */
-class XD_AI_SYSTEMEX_EDITOR_API EdMode_AI_SystemEx : public FEdMode
+class XD_AI_SYSTEMEX_EDITOR_API FEdMode_AI_SystemEx : public FEdMode
 {
 	using Super = FEdMode;
 public:
-	EdMode_AI_SystemEx();
+	FEdMode_AI_SystemEx();
 
 	bool IsCompatibleWith(FEditorModeID OtherModeID) const override { return true; }
 	bool UsesToolkits() const override { return false; }
@@ -28,8 +28,8 @@ public:
 	bool ShouldDrawWidget() const override;
 	bool UsesTransformWidget() const override;
 	FVector GetWidgetLocation() const override;
-// 	bool GetCustomDrawingCoordinateSystem(FMatrix& InMatrix, void* InData) override;
-// 	bool GetCustomInputCoordinateSystem(FMatrix& InMatrix, void* InData) override;
+ 	bool GetCustomDrawingCoordinateSystem(FMatrix& InMatrix, void* InData) override;
+ 	bool GetCustomInputCoordinateSystem(FMatrix& InMatrix, void* InData) override;
 public:
 	static FName ID;
 
