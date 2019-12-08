@@ -20,7 +20,7 @@ public:
 	FTransform RelativeTransform = FTransform(FQuat::Identity, FVector::ZeroVector, FVector::OneVector * 100.f);
 
 	FTransform GetRelativeTransform() const override { return FTransform(RelativeTransform); }
-	void SetRelativeTransform(const FTransform& Transform) override { RelativeTransform = Transform; }
+	void AddRelativeTransform(const FTransform& AddTransform) override { RelativeTransform += AddTransform; }
 
 	void Render(const FTransform& WorldTransform, const FColor Color, FPrimitiveDrawInterface* PDI) const override;
 };

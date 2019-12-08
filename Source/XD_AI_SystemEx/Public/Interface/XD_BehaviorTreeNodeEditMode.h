@@ -25,7 +25,7 @@ class XD_AI_SYSTEMEX_API IXD_BehaviorTreeNodeEditMode
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual FTransform GetRelativeTransform() const = 0;
-	virtual void SetRelativeTransform(const FTransform& Transform) = 0;
+	virtual void AddRelativeTransform(const FTransform& AddTransform) = 0;
 
 	virtual void Render(const FTransform& WorldTransform, const FColor Color, FPrimitiveDrawInterface* PDI) const = 0;
 };

@@ -160,10 +160,11 @@ bool FEdMode_AI_SystemEx::InputDelta(FEditorViewportClient* InViewportClient, FV
 			const bool bDoScale = WidgetMode == FWidget::WM_Scale;
 
 			const FTransform ParentTransform = SelectedActor->GetActorTransform();
-			FTransform RelativeTransform = Node->GetRelativeTransform();
+			const FTransform RelativeTransform = Node->GetRelativeTransform();
+			FTransform AddTransform(FQuat::Identity, FVector::ZeroVector, FVector::ZeroVector);
 			if (bDoTranslation)
 			{
-				RelativeTransform.AddToTranslation(ParentTransform.InverseTransformVectorNoScale(InDrag));
+				AddTransform.SetLocation(ParentTransform.InverseTransformVectorNoScale(InDrag));
 			}
 			if (bDoRotation)
 			{
@@ -172,13 +173,17 @@ bool FEdMode_AI_SystemEx::InputDelta(FEditorViewportClient* InViewportClient, FV
 				float RotAngle;
 				InRot.Quaternion().ToAxisAndAngle(RotAxis, RotAngle);
 				const FVector4 BoneSpaceAxis = InverseWorldTransform.TransformVectorNoScale(RotAxis);
-				RelativeTransform.SetRotation(FQuat(BoneSpaceAxis, RotAngle).GetNormalized() * RelativeTransform.GetRotation());
+				AddTransform.SetRotation(FQuat(BoneSpaceAxis, RotAngle).GetNormalized());
 			}
 			if (bDoScale)
 			{
-				RelativeTransform.SetScale3D(RelativeTransform.GetScale3D() + InScale);
+				AddTransform.SetScale3D(InScale);
 			}
-			Node->SetRelativeTransform(RelativeTransform);
+			if (bDoTranslation || bDoRotation || bDoScale)
+			{
+				Node->AddRelativeTransform(AddTransform);
+				CastChecked<UObject>(Node)->Modify();
+			}
 			return true;
 		}
 	}
