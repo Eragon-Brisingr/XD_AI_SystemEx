@@ -9,8 +9,11 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "EditorModeManager.h"
 #include "SceneManagement.h"
-#include "XD_BehaviorTreeNodeEditMode.h"
 #include "EngineUtils.h"
+#include "AssetEditorSubsystem.h"
+#include "Editor.h"
+
+#include "XD_BehaviorTreeNodeEditMode.h"
 
 #define LOCTEXT_NAMESPACE "XD_AI_SystemEx"
 
@@ -99,14 +102,14 @@ void FEdMode_AI_SystemEx::Tick(FEditorViewportClient* ViewportClient, float Delt
 
 	IAssetEditorInstance* ActivedBehaviorTreeEditorInstance = nullptr;
 	{
-		FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
-		TArray<UObject*> AllEditedAssets = AssetEditorManager.GetAllEditedAssets();
+		UAssetEditorSubsystem* AssetEditorSubsystem = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
+		TArray<UObject*> AllEditedAssets = AssetEditorSubsystem->GetAllEditedAssets();
 		double MaxLastActivationTime = TNumericLimits<double>::Lowest();
 		for (UObject* EditedAsset : AllEditedAssets)
 		{
 			if (UBehaviorTree* BehaviorTree = Cast<UBehaviorTree>(EditedAsset))
 			{
-				IAssetEditorInstance* AssetEditorInstance = AssetEditorManager.FindEditorForAsset(EditedAsset, false);
+				IAssetEditorInstance* AssetEditorInstance = AssetEditorSubsystem->FindEditorForAsset(EditedAsset, false);
 				FName EditorName = AssetEditorInstance->GetEditorName();
 				static FName BehaviorTreeEditorName = TEXT("Behavior Tree");
 				if (EditorName == BehaviorTreeEditorName)
