@@ -1,17 +1,17 @@
 ﻿// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "XD_AI_SystemEx_Editor.h"
-#include "PropertyEditorModule.h"
+#include <PropertyEditorModule.h>
 #include "ISettingsModule.h"
 #include "EditorModeRegistry.h"
-#include "Editor.h"
-#include "EditorModeManager.h"
-#include "AssetEditorManager.h"
+#include <Editor.h>
+#include <EditorModeManager.h>
+#include <Toolkits/AssetEditorManager.h>
+#include <BehaviorTree/BehaviorTree.h>
 
 #include "XD_PropertyCustomizationEx.h"
-#include "XD_RecastNavMesh.h"
-#include "EdMode_AI_SystemEx.h"
-#include "BehaviorTree/BehaviorTree.h"
+#include "Nav/XD_RecastNavMesh.h"
+#include "EdMode/EdMode_AI_SystemEx.h"
 
 #define LOCTEXT_NAMESPACE "FXD_AI_SystemEx_EditorModule"
 

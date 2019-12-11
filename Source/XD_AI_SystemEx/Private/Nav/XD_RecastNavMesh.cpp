@@ -1,16 +1,17 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "XD_RecastNavMesh.h"
-#include "NavigationSystem.h"
-#include "DrawDebugHelpers.h"
-#include "ParallelFor.h"
-#include "XD_NavDataExtra.h"
-#include "NavLinkComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "Engine/Engine.h"
-#include "TimerManager.h"
-#include "RecastFilter_UseDefaultArea.h"
+#include "Nav/XD_RecastNavMesh.h"
+#include <NavigationSystem.h>
+#include <DrawDebugHelpers.h>
+#include <NavLinkComponent.h>
+#include <Kismet/KismetSystemLibrary.h>
+#include <Engine/Engine.h>
+#include <TimerManager.h>
+#include <Async/ParallelFor.h>
+#include <NavFilters/RecastFilter_UseDefaultArea.h>
+
+#include "Nav/XD_NavDataExtra.h"
 #include "Utils/XD_AI_Log.h"
 
 AXD_RecastNavMesh::AXD_RecastNavMesh(const FObjectInitializer& ObjectInitializer)

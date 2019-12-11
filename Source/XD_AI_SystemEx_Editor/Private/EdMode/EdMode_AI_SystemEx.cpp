@@ -1,19 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EdMode_AI_SystemEx.h"
-#include "AssetEditorManager.h"
-#include "AIGraphEditor.h"
-#include "WorkflowCentricApplication.h"
-#include "AIGraphNode.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "EditorModeManager.h"
-#include "SceneManagement.h"
-#include "EngineUtils.h"
-#include "AssetEditorSubsystem.h"
-#include "Editor.h"
+#include "EdMode/EdMode_AI_SystemEx.h"
+#include <AIGraphEditor.h>
+#include <WorkflowOrientedApp/WorkflowCentricApplication.h>
+#include <AIGraphNode.h>
+#include <BehaviorTree/BehaviorTree.h>
+#include <EditorModeManager.h>
+#include <SceneManagement.h>
+#include <EngineUtils.h>
+#include <Subsystems/AssetEditorSubsystem.h>
+#include <Editor.h>
 
-#include "XD_BehaviorTreeNodeEditMode.h"
+#include "Interface/XD_BehaviorTreeNodeEditMode.h"
 
 #define LOCTEXT_NAMESPACE "XD_AI_SystemEx"
 

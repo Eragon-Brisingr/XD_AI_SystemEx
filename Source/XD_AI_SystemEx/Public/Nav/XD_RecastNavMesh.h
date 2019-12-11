@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "NavMesh/RecastNavMesh.h"
-#include "RecastNavMeshGenerator.h"
+#include <NavMesh/RecastNavMeshGenerator.h>
 #include "XD_RecastNavMesh.generated.h"
 
 class AXD_NavDataExtra;

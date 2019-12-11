@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "XD_BehaviorTreeNodeEditMode_Example.h"
-#include "SceneManagement.h"
+#include "Interface/XD_BehaviorTreeNodeEditMode_Example.h"
+#include <SceneManagement.h>
 
 void UXD_BehaviorTreeNodeEditMode_Example::Render(const FTransform& WorldTransform, const FColor Color, FPrimitiveDrawInterface* PDI) const
 {

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
-#include "XD_BehaviorTreeNodeEditMode.h"
+#include "Interface/XD_BehaviorTreeNodeEditMode.h"
 //#include "XD_BehaviorTreeNodeEditMode_Example.generated.h"
 
 /**

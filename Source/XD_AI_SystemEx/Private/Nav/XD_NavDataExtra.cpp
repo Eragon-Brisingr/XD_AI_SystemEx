@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "XD_NavDataExtra.h"
-#include "NavLinkComponent.h"
+#include "Nav/XD_NavDataExtra.h"
+#include <NavLinkComponent.h>
 
 // Sets default values
 AXD_NavDataExtra::AXD_NavDataExtra(const FObjectInitializer& ObjectInitializer)

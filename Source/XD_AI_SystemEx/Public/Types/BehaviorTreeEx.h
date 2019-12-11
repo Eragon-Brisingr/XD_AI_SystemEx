@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-//#include "UObject/NoExportTypes.h"
+#include <GameplayTagContainer.h>
+//#include <UObject/NoExportTypes.h>
 #include "BehaviorTreeEx.generated.h"
 
 /**

@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "BehaviorTreeEx_Customization.h"
-#include "PropertyHandle.h"
-#include "DetailWidgetRow.h"
-#include "BehaviorTree/BehaviorTree.h"
+#include "Customizations/BehaviorTreeEx_Customization.h"
+#include <PropertyHandle.h>
+#include <DetailWidgetRow.h>
+#include <BehaviorTree/BehaviorTree.h>
 
-#include "BehaviorTreeEx.h"
+#include "Types/BehaviorTreeEx.h"
 
 #define LOCTEXT_NAMESPACE "XD_AI_SystemEx"
 
