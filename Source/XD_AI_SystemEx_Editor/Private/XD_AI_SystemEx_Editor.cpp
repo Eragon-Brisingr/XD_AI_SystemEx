@@ -59,8 +59,8 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
 	
+	if (FPropertyEditorModule* PropertyModule = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor"))
 	{
-		FPropertyEditorModule* PropertyModule = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor");
 		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeInstantiatable));
 		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeWithSubTree));
 	}
@@ -68,7 +68,6 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
 	AssetEditorManager.OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
 
-	GLevelEditorModeTools().DeactivateMode(FEdMode_AI_SystemEx::ID);
 	FEditorModeRegistry::Get().UnregisterMode(FEdMode_AI_SystemEx::ID);
 }
 
