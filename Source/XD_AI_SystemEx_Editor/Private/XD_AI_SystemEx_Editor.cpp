@@ -6,7 +6,7 @@
 #include "EditorModeRegistry.h"
 #include <Editor.h>
 #include <EditorModeManager.h>
-#include <Toolkits/AssetEditorManager.h>
+#include <Subsystems/AssetEditorSubsystem.h>
 #include <BehaviorTree/BehaviorTree.h>
 
 #include "XD_PropertyCustomizationEx.h"
@@ -44,13 +44,16 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 
 	FEditorModeRegistry::Get().RegisterMode<FEdMode_AI_SystemEx>(FEdMode_AI_SystemEx::ID);
 
-	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
-	OnAssetOpenedInEditorHandle = AssetEditorManager.OnAssetOpenedInEditor().AddLambda([](UObject* Asset, IAssetEditorInstance* AssetEditorInstance)
+	FCoreDelegates::OnPostEngineInit.AddLambda([this]()
 		{
-			if (UBehaviorTree* BehaviorTree = Cast<UBehaviorTree>(Asset))
-			{
-				GLevelEditorModeTools().ActivateMode(FEdMode_AI_SystemEx::ID);
-			}
+			UAssetEditorSubsystem* AssetEditor = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
+			OnAssetOpenedInEditorHandle = AssetEditor->OnAssetOpenedInEditor().AddLambda([](UObject* Asset, IAssetEditorInstance* AssetEditorInstance)
+				{
+					if (UBehaviorTree* BehaviorTree = Cast<UBehaviorTree>(Asset))
+					{
+						GLevelEditorModeTools().ActivateMode(FEdMode_AI_SystemEx::ID);
+					}
+				});
 		});
 }
 
@@ -59,14 +62,16 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
 	
-	if (FPropertyEditorModule* PropertyModule = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor"))
+	if (FPropertyEditorModule* PropertyModulePtr = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor"))
 	{
-		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeInstantiatable));
-		PropertyModule->UnregisterCustomPropertyTypeLayout(GET_TYPE_NAME_CHECKED(FBehaviorTreeWithSubTree));
+		FPropertyEditorModule& PropertyModule = *PropertyModulePtr;
+
+		UnregisterCustomProperty(FBehaviorTreeInstantiatable);
+		UnregisterCustomProperty(FBehaviorTreeWithSubTree);
 	}
 
-	FAssetEditorManager& AssetEditorManager = FAssetEditorManager::Get();
-	AssetEditorManager.OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
+	UAssetEditorSubsystem* AssetEditor = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
+	AssetEditor->OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
 
 	FEditorModeRegistry::Get().UnregisterMode(FEdMode_AI_SystemEx::ID);
 }
