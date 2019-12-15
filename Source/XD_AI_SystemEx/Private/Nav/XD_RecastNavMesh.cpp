@@ -247,7 +247,7 @@ void AXD_RecastNavMesh::OnNavMeshTilesUpdated(const TArray<uint32>& ChangedTiles
  		NavSys->UpdateNavOctreeElement(NavDataExtra, NavElement, UNavigationSystemV1::EOctreeUpdateMode::OctreeUpdate_Default);
  		NavDataExtra->bIsNavLinkUpdated = true;
 
-		XD_AIDisplay_LOG("开始构建[%s]的跳跃信息", *NavDataExtra->GetName());
+		// XD_AI_Display_LOG("开始构建[%s]的跳跃信息", *NavDataExtra->GetName());
 	}
 }
 
@@ -266,7 +266,7 @@ void AXD_RecastNavMesh::OnNavMeshGenerationFinished()
 				GetWorld()->GetTimerManager().SetTimer(TimeHandle, FTimerDelegate::CreateWeakLambda(NavDataExtra, [=]()
 					{
 						NavDataExtra->bIsNavLinkUpdated = false;
-						XD_AIDisplay_LOG("结束构建[%s]的跳跃信息", *NavDataExtra->GetName());
+						// XD_AI_Display_LOG("结束构建[%s]的跳跃信息", *NavDataExtra->GetName());
 					}), 1.f, false);
 			}
 		}

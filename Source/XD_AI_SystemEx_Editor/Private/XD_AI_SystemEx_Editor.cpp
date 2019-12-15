@@ -70,8 +70,11 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 		UnregisterCustomProperty(FBehaviorTreeWithSubTree);
 	}
 
-	UAssetEditorSubsystem* AssetEditor = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
-	AssetEditor->OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
+	if (GEditor)
+	{
+		UAssetEditorSubsystem* AssetEditor = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
+		AssetEditor->OnAssetOpenedInEditor().Remove(OnAssetOpenedInEditorHandle);
+	}
 
 	FEditorModeRegistry::Get().UnregisterMode(FEdMode_AI_SystemEx::ID);
 }
