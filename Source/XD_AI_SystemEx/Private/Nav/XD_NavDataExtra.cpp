@@ -30,7 +30,7 @@ void AXD_NavDataExtra::Tick(float DeltaTime)
 
 }
 
-FBox AXD_NavDataExtra::GetComponentsBoundingBox(bool bNonColliding /*= false*/) const
+FBox AXD_NavDataExtra::GetComponentsBoundingBox(bool bNonColliding, bool bIncludeFromChildActors) const
 {
 	//考虑下PointLinks为空导至LinksBB没更新的问题
 
@@ -61,7 +61,7 @@ FBox AXD_NavDataExtra::GetComponentsBoundingBox(bool bNonColliding /*= false*/) 
 
 FBox AXD_NavDataExtra::GetNavigationBounds() const
 {
-	return GetComponentsBoundingBox();
+	return GetComponentsBoundingBox(false, false);
 }
 
 bool AXD_NavDataExtra::IsNavigationRelevant() const

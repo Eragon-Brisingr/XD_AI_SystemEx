@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FBox GetComponentsBoundingBox(bool bNonColliding = false) const override;
+	FBox GetComponentsBoundingBox(bool bNonColliding, bool bIncludeFromChildActors) const override;
 
 	int32 bIsNavLinkUpdated : 1;
 
