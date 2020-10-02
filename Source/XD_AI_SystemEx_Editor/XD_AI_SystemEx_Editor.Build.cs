@@ -45,9 +45,7 @@ public class XD_AI_SystemEx_Editor : ModuleRules
                 "AIGraph",
                 "BehaviorTreeEditor",
 
-                "XD_AI_SystemEx",
-                "XD_UnrealLibraryEx",
-                "XD_UnrealLibraryEx_Editor",
+                "XD_AI_SystemEx"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

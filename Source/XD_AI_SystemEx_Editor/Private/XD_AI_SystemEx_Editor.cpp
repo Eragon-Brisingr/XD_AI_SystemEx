@@ -9,7 +9,7 @@
 #include <Subsystems/AssetEditorSubsystem.h>
 #include <BehaviorTree/BehaviorTree.h>
 
-#include "XD_PropertyCustomizationEx.h"
+#include "Customizations/BehaviorTreeEx_Customization.h"
 #include "Nav/XD_RecastNavMesh.h"
 #include "EdMode/EdMode_AI_SystemEx.h"
 
@@ -25,8 +25,8 @@ void FXD_AI_SystemEx_EditorModule::StartupModule()
 	{
 		FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-		RegisterCustomProperty(FBehaviorTreeInstantiatable, FBehaviorTreeInstantiatable_Customization);
-		RegisterCustomProperty(FBehaviorTreeWithSubTree, FBehaviorTreeWithSubTree_Customization);
+		PropertyModule.RegisterCustomPropertyTypeLayout(TEXT("BehaviorTreeInstantiatable"), FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FBehaviorTreeInstantiatable_Customization::MakeInstance));
+		PropertyModule.RegisterCustomPropertyTypeLayout(TEXT("BehaviorTreeWithSubTree"), FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FBehaviorTreeWithSubTree_Customization::MakeInstance));
 	}
 
 	{
@@ -65,9 +65,8 @@ void FXD_AI_SystemEx_EditorModule::ShutdownModule()
 	if (FPropertyEditorModule* PropertyModulePtr = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor"))
 	{
 		FPropertyEditorModule& PropertyModule = *PropertyModulePtr;
-
-		UnregisterCustomProperty(FBehaviorTreeInstantiatable);
-		UnregisterCustomProperty(FBehaviorTreeWithSubTree);
+		PropertyModule.UnregisterCustomPropertyTypeLayout(TEXT("BehaviorTreeInstantiatable"));
+		PropertyModule.UnregisterCustomPropertyTypeLayout(TEXT("BehaviorTreeWithSubTree"));
 	}
 
 	if (GEditor)
