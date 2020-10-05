@@ -31,7 +31,7 @@ void AXD_RecastNavMesh::OnNavMeshTilesUpdated(const TArray<uint32>& ChangedTiles
 		{
 			FActorSpawnParameters ActorSpawnParameters;
 			ActorSpawnParameters.OverrideLevel = GetLevel();
-			ActorSpawnParameters.Name = *FString::Printf(TEXT("%s_[%d]"), *GetName(), TileIdx);
+			ActorSpawnParameters.Name = *FString::Printf(TEXT("%s_%d"), *GetName(), TileIdx);
 			NavDataExtra = GetWorld()->SpawnActor<AXD_NavDataExtra>(ActorSpawnParameters);
 #if WITH_EDITOR
 			NavDataExtra->SetActorLabel(ActorSpawnParameters.Name.ToString());
